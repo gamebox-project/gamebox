@@ -1,0 +1,29 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Gamebox"
+run/main_scene="res://menu.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Gamebox Playtest"
+config/features=PackedStringArray("4.2", "Forward Plus")
+boot_splash/image="res://logo.png"
+boot_splash/fullsize=false
+config/icon="res://icon.png"
+config/windows_native_icon="res://icon.ico"
+
+[display]
+
+window/size/mode=2
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"

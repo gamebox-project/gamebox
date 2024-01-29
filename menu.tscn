@@ -1,0 +1,427 @@
+[gd_scene load_steps=5 format=3 uid="uid://b4x40minoq50g"]
+
+[ext_resource type="Script" path="res://menu.gd" id="1_mj1qi"]
+[ext_resource type="Texture2D" uid="uid://iw2f62oqym8n" path="res://logo.png" id="2_5m028"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u2x58"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m64x"]
+
+[node name="Menu" type="Node"]
+script = ExtResource("1_mj1qi")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.105882, 0.156863, 0.219608, 1)
+
+[node name="Games" type="ItemList" parent="."]
+anchors_preset = -1
+anchor_top = 0.0478395
+anchor_right = 1.0
+anchor_bottom = 0.919753
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/guide_color = Color(1, 1, 1, 0)
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 16
+theme_override_font_sizes/font_size = 24
+theme_override_styles/panel = SubResource("StyleBoxEmpty_u2x58")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_7m64x")
+allow_reselect = true
+max_text_lines = 2
+max_columns = 10
+same_column_width = true
+fixed_column_width = 256
+icon_mode = 0
+fixed_icon_size = Vector2i(256, 256)
+metadata/_edit_use_anchors_ = true
+
+[node name="Versions" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -52.0
+offset_right = 243.0
+grow_vertical = 0
+text = "Gamebox v0.0.1 (playtest)
+Godot Engine v"
+
+[node name="Buttons" type="HBoxContainer" parent="."]
+offset_right = 300.0
+offset_bottom = 31.0
+theme_override_constants/separation = 0
+
+[node name="Workshop" type="Button" parent="Buttons"]
+layout_mode = 2
+tooltip_text = "Steam Overlay - https://steamcommunity.com/app/2744870/workshop/"
+text = "Workshop"
+
+[node name="Upload" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Upload"
+
+[node name="Window" type="Window" parent="Buttons/Upload"]
+title = "Workshop Uploader"
+position = Vector2i(100, 100)
+size = Vector2i(800, 600)
+visible = false
+
+[node name="Note" type="Label" parent="Buttons/Upload/Window"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 795.0
+offset_bottom = 83.0
+text = "NOTE: If you're going to upload a game, make sure you've properly configured the gamebox_game.json file. Read the guide by clicking the Help button for more information."
+autowrap_mode = 2
+
+[node name="SelectFolder" type="Button" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 100.0
+offset_right = 106.0
+offset_bottom = 131.0
+text = "Select folder..."
+
+[node name="FileDialog" type="FileDialog" parent="Buttons/Upload/Window/SelectFolder"]
+title = "Open a Directory"
+position = Vector2i(200, 200)
+size = Vector2i(800, 600)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+access = 2
+
+[node name="FolderPath" type="TextEdit" parent="Buttons/Upload/Window"]
+offset_left = 140.0
+offset_top = 100.0
+offset_right = 790.0
+offset_bottom = 136.0
+editable = false
+
+[node name="SelectImage" type="Button" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 140.0
+offset_right = 129.0
+offset_bottom = 171.0
+text = "Select image..."
+
+[node name="FileDialog" type="FileDialog" parent="Buttons/Upload/Window/SelectImage"]
+title = "Open a File"
+position = Vector2i(300, 200)
+size = Vector2i(800, 600)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png")
+
+[node name="ImagePath" type="TextEdit" parent="Buttons/Upload/Window"]
+offset_left = 140.0
+offset_top = 140.0
+offset_right = 790.0
+offset_bottom = 176.0
+editable = false
+
+[node name="ItemType" type="OptionButton" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 187.0
+offset_right = 53.0
+offset_bottom = 207.0
+item_count = 16
+selected = 1
+popup/item_0/text = "Item type"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_0/separator = true
+popup/item_1/text = ""
+popup/item_1/id = 1
+popup/item_2/text = "Games"
+popup/item_2/id = 2
+popup/item_3/text = "Maps"
+popup/item_3/id = 3
+popup/item_4/text = "Models"
+popup/item_4/id = 4
+popup/item_5/text = "Scripts"
+popup/item_5/id = 5
+popup/item_6/text = "Skins"
+popup/item_6/id = 6
+popup/item_7/text = "Textures"
+popup/item_7/id = 7
+popup/item_8/text = "Materials"
+popup/item_8/id = 8
+popup/item_9/text = "Shaders"
+popup/item_9/id = 9
+popup/item_10/text = "Particles"
+popup/item_10/id = 10
+popup/item_11/text = "Sprites"
+popup/item_11/id = 11
+popup/item_12/text = "Prefabs"
+popup/item_12/id = 12
+popup/item_13/text = "Audio"
+popup/item_13/id = 13
+popup/item_14/text = "Saves"
+popup/item_14/id = 14
+popup/item_15/text = "Misc"
+popup/item_15/id = 15
+
+[node name="UpdateOrNew" type="OptionButton" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 228.0
+offset_right = 150.0
+offset_bottom = 259.0
+item_count = 2
+selected = 0
+popup/item_0/text = "Update item"
+popup/item_0/id = 0
+popup/item_1/text = "New item"
+popup/item_1/id = 1
+
+[node name="ItemID" type="TextEdit" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 269.0
+offset_right = 210.0
+offset_bottom = 306.0
+placeholder_text = "Item ID"
+
+[node name="Upload" type="Button" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 316.0
+offset_right = 74.0
+offset_bottom = 347.0
+disabled = true
+text = "Upload"
+
+[node name="UpdateProgress" type="Label" parent="Buttons/Upload/Window"]
+offset_left = 10.0
+offset_top = 357.0
+offset_right = 114.0
+offset_bottom = 383.0
+
+[node name="Note2" type="Label" parent="Buttons/Upload/Window"]
+offset_left = 5.0
+offset_top = 401.0
+offset_right = 795.0
+offset_bottom = 479.0
+text = "NOTE: After you've uploaded a new item, the Steam Overlay will open and the item will be shown. It will be set to hidden and its title will be the same as the folder name. You can then change the title, set it to public, etc."
+autowrap_mode = 2
+
+[node name="Timer" type="Timer" parent="Buttons/Upload/Window"]
+
+[node name="Help" type="Button" parent="Buttons"]
+layout_mode = 2
+tooltip_text = "Steam Overlay - https://steamcommunity.com/sharedfiles/filedetails/?id=3148684231"
+text = "Help"
+
+[node name="About" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "About"
+
+[node name="Window" type="Window" parent="Buttons/About"]
+title = "About"
+position = Vector2i(100, 100)
+size = Vector2i(800, 600)
+visible = false
+
+[node name="Logo" type="TextureRect" parent="Buttons/About/Window"]
+offset_left = 150.0
+offset_top = 10.0
+offset_right = 1150.0
+offset_bottom = 160.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_5m028")
+
+[node name="Description" type="Label" parent="Buttons/About/Window"]
+offset_left = 107.0
+offset_top = 100.0
+offset_right = 694.0
+offset_bottom = 126.0
+text = "Gamebox is a free and open source sandbox game made with Godot Engine."
+
+[node name="Tabs" type="TabContainer" parent="Buttons/About/Window"]
+offset_left = 5.0
+offset_top = 140.0
+offset_right = 795.0
+offset_bottom = 595.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Licenses" type="TabContainer" parent="Buttons/About/Window/Tabs"]
+layout_mode = 2
+
+[node name="Gamebox" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses"]
+layout_mode = 2
+text = "Copyright (c) 2024 Gamebox
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \"Software\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."
+
+[node name="GodotEngine" type="TabContainer" parent="Buttons/About/Window/Tabs/Licenses"]
+visible = false
+layout_mode = 2
+
+[node name="License" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses/GodotEngine"]
+layout_mode = 2
+text = "Copyright (c) 2014-present Godot Engine contributors.
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+
+[node name="Logo" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses/GodotEngine"]
+visible = false
+layout_mode = 2
+text = "Godot Engine Logo
+Copyright (c) 2017 Andrea Calabró
+
+This work is licensed under the Creative Commons Attribution 4.0 International
+license (CC BY 4.0 International): https://creativecommons.org/licenses/by/4.0/
+
+---
+
+Godot Logo (C) Andrea Calabró
+Distributed under the terms of the Creative Commons Attribution License
+version 3.0 (CC-BY 3.0) <https://creativecommons.org/licenses/by/3.0/legalcode>."
+
+[node name="ThirdPartyLicenses" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses/GodotEngine"]
+visible = false
+layout_mode = 2
+text = "The FreeType Project
+
+Portions of this software are copyright © 1996-2023 The FreeType Project (www.freetype.org). All rights reserved.
+
+---
+
+ENet
+
+Copyright (c) 2002-2020 Lee Salzman
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+Mbed TLS
+
+Copyright The Mbed TLS Contributors
+
+Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License."
+
+[node name="GodotSteam" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses"]
+visible = false
+layout_mode = 2
+text = "MIT License
+
+Copyright (c) 2017-Current | CoaguCo Industries and GP Garcia
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \"Software\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"
+
+[node name="Tests" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses"]
+visible = false
+layout_mode = 2
+text = "The tests included are made with assets from the Godot Asset Library. 2D Grappling Hook by ShatteredReality (CC0 license) and Basic 3d Starter by Luking (MIT license).
+
+---
+
+Basic 3d Starter
+
+MIT License
+
+Copyright (c) 2023 technolukas
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \"Software\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."
+
+[node name="Changelog" type="RichTextLabel" parent="Buttons/About/Window/Tabs"]
+visible = false
+layout_mode = 2
+
+[node name="Open" type="Button" parent="Buttons/About/Window/Tabs/Changelog"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+tooltip_text = "Steam Overlay - https://steamcommunity.com/sharedfiles/filedetails/?id=3148694992"
+text = "Open"
+
+[node name="Quit" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="item_activated" from="Games" to="." method="_on_games_item_activated"]
+[connection signal="pressed" from="Buttons/Workshop" to="." method="_on_workshop_pressed"]
+[connection signal="pressed" from="Buttons/Upload" to="." method="_on_upload_pressed"]
+[connection signal="close_requested" from="Buttons/Upload/Window" to="." method="_on_upload_window_close_requested"]
+[connection signal="pressed" from="Buttons/Upload/Window/SelectFolder" to="." method="_on_select_folder_pressed"]
+[connection signal="dir_selected" from="Buttons/Upload/Window/SelectFolder/FileDialog" to="." method="_on_select_folder_file_dialog_dir_selected"]
+[connection signal="pressed" from="Buttons/Upload/Window/SelectImage" to="." method="_on_select_image_pressed"]
+[connection signal="file_selected" from="Buttons/Upload/Window/SelectImage/FileDialog" to="." method="_on_select_image_file_dialog_file_selected"]
+[connection signal="item_selected" from="Buttons/Upload/Window/UpdateOrNew" to="." method="_on_update_or_new_item_selected"]
+[connection signal="pressed" from="Buttons/Upload/Window/Upload" to="." method="_on_upload_to_workshop_pressed"]
+[connection signal="timeout" from="Buttons/Upload/Window/Timer" to="." method="_on_upload_timer_timeout"]
+[connection signal="pressed" from="Buttons/Help" to="." method="_on_help_pressed"]
+[connection signal="pressed" from="Buttons/About" to="." method="_on_about_pressed"]
+[connection signal="close_requested" from="Buttons/About/Window" to="." method="_on_about_window_close_requested"]
+[connection signal="pressed" from="Buttons/About/Window/Tabs/Changelog/Open" to="." method="_on_open_changelog_pressed"]
+[connection signal="pressed" from="Buttons/Quit" to="." method="_on_quit_pressed"]
