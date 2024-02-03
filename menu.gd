@@ -215,7 +215,7 @@ func _on_games_item_activated(index):
 						file_extension = ".exe"
 						#lib_path = OS.get_environment("PATH")
 						#OS.set_environment("PATH", lib_path + ";" + game_path.path_join(gamebox_game["godot"]["pack"]).get_base_dir())
-				if OS.create_process(OS.get_executable_path().get_base_dir().path_join("godot/") + godot_version + "/godot-" + GODOT_VERSIONS[godot_version] + file_extension, ["--main-pack", game_path.path_join(gamebox_game["godot"]["pack"])]) == -1:
+				if OS.create_process(OS.get_executable_path().get_base_dir().path_join("godot/") + godot_version + "/godot-" + GODOT_VERSIONS[godot_version] + file_extension, ["--path", game_path.path_join(gamebox_game["godot"]["pack"].get_base_dir()), "--main-pack", game_path.path_join(gamebox_game["godot"]["pack"])]) == -1:
 					OS.alert("This game's process creation of Godot failed.", "Error - Gamebox")
 #				match OS.get_name():
 #					"Linux":
@@ -307,7 +307,7 @@ func _on_item_updated(result, accept_tos):
 	#upload_timer.stop()
 	if result == 1:
 		update_progress_label.set_text("Upload successful.")
-		Steam.activateGameOverlayToWebPage("steam://url/CommunityFilePage/" + str(workshop_item_id))
+		Steam.activateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=" + str(workshop_item_id))
 	else:
 		update_progress_label.set_text("Upload failed. Error code: " + str(result))
 	if accept_tos:

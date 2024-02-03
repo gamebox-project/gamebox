@@ -52,7 +52,7 @@ anchor_bottom = 1.0
 offset_top = -52.0
 offset_right = 243.0
 grow_vertical = 0
-text = "Gamebox v0.0.1 (playtest)
+text = "Gamebox v0.0.2 (playtest)
 Godot Engine v"
 
 [node name="Buttons" type="HBoxContainer" parent="."]
