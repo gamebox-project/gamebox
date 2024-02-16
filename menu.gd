@@ -300,11 +300,11 @@ func _upload_to_workshop(file_id):
 	update_progress = Steam.getItemUpdateProgress(update_handle)
 	if update_progress["status"] > 0:
 		update_progress_label.set_text("Uploading...")
-		#upload_timer.start()
+		upload_timer.start()
 
 
 func _on_item_updated(result, accept_tos):
-	#upload_timer.stop()
+	upload_timer.stop()
 	if result == 1:
 		update_progress_label.set_text("Upload successful.")
 		Steam.activateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=" + str(workshop_item_id))
@@ -332,7 +332,12 @@ func _on_upload_timer_timeout():
 	update_progress = Steam.getItemUpdateProgress(update_handle)
 	if update_progress["total"] != 0:
 		var percent = 100 * update_progress["processed"] / update_progress["total"]
-		update_progress_label.set_text("Uploading... " + str(percent) + "%")
+		if update_progress["status"] == 2:
+			update_progress_label.set_text("Uploading... (preparing) " + str(percent) + "%")
+		elif update_progress["status"] == 3:
+			update_progress_label.set_text("Uploading... " + str(percent) + "%")
+	if update_progress["status"] == 4:
+		update_progress_label.set_text("Uploading... (image)")
 
 
 func _on_upload_window_close_requested():
