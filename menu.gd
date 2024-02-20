@@ -1,7 +1,7 @@
 extends Node
 
 
-const STEAM_APP_ID = 2744870 # Playtest App ID
+const STEAM_APP_ID = 2744620
 const GODOT_VERSIONS = {
 	"4.2": "4.2.1",
 	"4.1": "4.1.3",
@@ -18,6 +18,8 @@ const GODOT_VERSIONS = {
 }
 var initialize_steam = {}
 var steam_id = 0
+var app_install_dir = ""
+var cache_path = ""
 var games = []
 var page_number = 1
 var get_games = 0
@@ -55,7 +57,9 @@ func _ready():
 			get_tree().quit()
 		else:
 			steam_id = Steam.getSteamID()
-			DirAccess.make_dir_absolute("user://workshop_cache_" + str(steam_id))
+			app_install_dir = Steam.getAppInstallDir(STEAM_APP_ID)["directory"]
+			cache_path = Steam.getAppInstallDir(STEAM_APP_ID)["directory"].path_join("cache/" + str(steam_id))
+			DirAccess.make_dir_recursive_absolute(cache_path)
 			Steam.connect("ugc_query_completed", _on_ugc_query_completed)
 			Steam.connect("item_installed", _on_item_installed)
 			Steam.connect("item_created", _on_item_created)
@@ -65,7 +69,6 @@ func _ready():
 			image_path_textedit.hide()
 			licenses_tab.set_tab_title(1, "Godot Engine")
 			godotengine_tab.set_tab_title(2, "Third-party licenses")
-			_add_tests()
 			delete_unused_images = 1
 			get_games = 1
 			getting_games = 1
@@ -106,26 +109,26 @@ func _get_games():
 
 func _on_ugc_query_completed(query_handle, result, results_returned, _total_matching, _cached):
 	if result == 1:
-		var workshop_cache_folder = DirAccess.open("user://workshop_cache_" + str(steam_id))
+		var cache_folder = DirAccess.open(cache_path)
 		for i in range(results_returned):
 			if Steam.getItemState(Steam.getQueryUGCResult(query_handle, i)["file_id"]) in [8, 9]:
 				Steam.downloadItem(Steam.getQueryUGCResult(query_handle, i)["file_id"], true)
 			games.append(Steam.getQueryUGCResult(query_handle, i))
-			if workshop_cache_folder:
-				workshop_cache_folder.list_dir_begin()
-				var file_name = workshop_cache_folder.get_next()
+			if cache_folder:
+				cache_folder.list_dir_begin()
+				var file_name = cache_folder.get_next()
 				while not file_name.ends_with(str(Steam.getQueryUGCResult(query_handle, i)["handle_preview_file"]) + ".png"):
 					if file_name == "":
 						var http_request = HTTPRequest.new()
 						add_child(http_request)
 						http_request.connect("request_completed", _on_request_completed)
-						http_request.set_download_file("user://workshop_cache_" + str(steam_id) + "/" + str(Steam.getQueryUGCResult(query_handle, i)["file_id"]) + "_" + str(Steam.getQueryUGCResult(query_handle, i)["handle_preview_file"]) + ".png")
+						http_request.set_download_file(cache_path + "/" + str(Steam.getQueryUGCResult(query_handle, i)["file_id"]) + "_" + str(Steam.getQueryUGCResult(query_handle, i)["handle_preview_file"]) + ".png")
 						http_request.request(Steam.getQueryUGCPreviewURL(query_handle, i))
 						break
-					file_name = workshop_cache_folder.get_next()
-				workshop_cache_folder.list_dir_end()
+					file_name = cache_folder.get_next()
+				cache_folder.list_dir_end()
 			else:
-				OS.alert("Couldn't access the workshop_cache folder.", "Error - Gamebox")
+				OS.alert("Couldn't access the cache folder.", "Error - Gamebox")
 	Steam.releaseQueryUGCRequest(query_handle)
 	if result == 1:
 		if results_returned == 50:
@@ -141,32 +144,32 @@ func _on_request_completed(_result, _response_code, _headers, _body):
 
 
 func _on_item_installed(app_id, file_id):
-	if app_id == STEAM_APP_ID and getting_games < 2 and FileAccess.file_exists(Steam.getItemInstallInfo(file_id)["folder"].path_join("gamebox_game.json")):
+	if app_id == STEAM_APP_ID and getting_games < 2 and FileAccess.file_exists(Steam.getItemInstallInfo(file_id)["folder"].path_join("gamebox.json")):
 		getting_games += 1
 
 
-func _add_tests():
-	var image_test = Image.load_from_file(OS.get_executable_path().get_base_dir().path_join("test2d.png"))
-	var icon_texture_test = ImageTexture.create_from_image(image_test)
-	$Games.add_item("Test 2D [Godot 4.1]", icon_texture_test)
-	image_test = Image.load_from_file(OS.get_executable_path().get_base_dir().path_join("test3d.png"))
-	icon_texture_test = ImageTexture.create_from_image(image_test)
-	$Games.add_item("Test 3D [Godot 4.1]", icon_texture_test)
+func _add_included_games():
+	var image = Image.load_from_file(app_install_dir.path_join("2d.png"))
+	var icon_texture = ImageTexture.create_from_image(image)
+	$Games.add_item("2D", icon_texture)
+	image = Image.load_from_file(app_install_dir.path_join("3d.png"))
+	icon_texture = ImageTexture.create_from_image(image)
+	$Games.add_item("3D", icon_texture)
 
 
 func _show_games():
 	$Games.clear()
-	_add_tests()
+	_add_included_games()
 	for game in games:
-		var image = Image.load_from_file("user://workshop_cache_" + str(steam_id) + "/" + str(game["file_id"]) + "_" + str(game["handle_preview_file"]) + ".png")
+		var image = Image.load_from_file(cache_path + "/" + str(game["file_id"]) + "_" + str(game["handle_preview_file"]) + ".png")
 		var icon_texture = ImageTexture.create_from_image(image)
 		$Games.add_item(game["title"], icon_texture)
 		$Games.set_item_metadata($Games.get_item_count() - 1, game["file_id"])
 	if delete_unused_images == 1:
 		var size = games.size()
-		var workshop_cache_folder = DirAccess.open("user://workshop_cache_" + str(steam_id))
-		workshop_cache_folder.list_dir_begin()
-		var file_name = workshop_cache_folder.get_next()
+		var cache_folder = DirAccess.open(cache_path)
+		cache_folder.list_dir_begin()
+		var file_name = cache_folder.get_next()
 		while file_name != "":
 			var i = 0
 			var id_handle = file_name.get_basename().split("_")
@@ -175,47 +178,46 @@ func _show_games():
 				if file_name.get_extension() == "png" and id_handle.size() == 2 and id_handle[0] == str(game["file_id"]) and id_handle[1] == str(game["handle_preview_file"]):
 					break
 				elif i == size:
-					workshop_cache_folder.remove(file_name)
-			file_name = workshop_cache_folder.get_next()
+					cache_folder.remove(file_name)
+			file_name = cache_folder.get_next()
 		delete_unused_images = 0
 
 
 func _on_games_item_activated(index):
 	if index in [0, 1]:
-		var test = "2d"
+		var game = "2d"
 		if index == 1:
-			test = "3d"
+			game = "3d"
 		var ext = ".x86_64"
 		if OS.get_name() == "Windows":
 			ext = ".exe"
-		if OS.create_process(OS.get_executable_path().get_base_dir().path_join("godot/4.1test/godot-" + GODOT_VERSIONS["4.1"] + ext), ["--main-pack", OS.get_executable_path().get_base_dir().path_join("test" + test + ".pck")]) == -1:
+		if OS.create_process(app_install_dir.path_join("godot/4.1gs/godot-" + GODOT_VERSIONS["4.1"] + ext), ["--main-pack", app_install_dir.path_join(game + ".pck")]) == -1:
 			OS.alert("This game's process creation of Godot failed.", "Error - Gamebox")
 	else:
 		var game_path = Steam.getItemInstallInfo($Games.get_item_metadata(index))["folder"]
-		var json = FileAccess.get_file_as_string(game_path.path_join("gamebox_game.json"))
-		var gamebox_game = JSON.parse_string(json)
-		if gamebox_game is Dictionary and "godot" in gamebox_game and "pack" in gamebox_game["godot"] and gamebox_game["godot"]["pack"] is String and FileAccess.file_exists(game_path.path_join(gamebox_game["godot"]["pack"])):
-			var pck = FileAccess.open(game_path.path_join(gamebox_game["godot"]["pack"]), FileAccess.READ)
+		var json = FileAccess.get_file_as_string(game_path.path_join("gamebox.json"))
+		var gamebox_json = JSON.parse_string(json)
+		if gamebox_json is Dictionary and "godot-pack" in gamebox_json and gamebox_json["godot-pack"] is String and FileAccess.file_exists(game_path.path_join(gamebox_json["godot-pack"])):
+			var pck = FileAccess.open(game_path.path_join(gamebox_json["godot-pack"]), FileAccess.READ)
 			var magic = pck.get_32()
 			pck.get_32()
 			var major = str(pck.get_32())
 			var minor = str(pck.get_32())
 			var godot_version = major + "." + minor
-			var file_extension = ""
+			var file_extension = ".x86_64"
 			#var lib_path = ""
 			if magic == 0x43504447 and godot_version in GODOT_VERSIONS:
 				match OS.get_name():
 					"Linux":
-						file_extension = ".x86_64"
 						if major in ["3", "2", "1"]:
 							file_extension = ".64"
 						#lib_path = OS.get_environment("LD_LIBRARY_PATH")
-						#OS.set_environment("LD_LIBRARY_PATH", lib_path + ":" + game_path.path_join(gamebox_game["godot"]["pack"]).get_base_dir())
+						#OS.set_environment("LD_LIBRARY_PATH", lib_path + ":" + game_path.path_join(gamebox_json["godot-pack"]).get_base_dir())
 					"Windows":
 						file_extension = ".exe"
 						#lib_path = OS.get_environment("PATH")
-						#OS.set_environment("PATH", lib_path + ";" + game_path.path_join(gamebox_game["godot"]["pack"]).get_base_dir())
-				if OS.create_process(OS.get_executable_path().get_base_dir().path_join("godot/") + godot_version + "/godot-" + GODOT_VERSIONS[godot_version] + file_extension, ["--path", game_path.path_join(gamebox_game["godot"]["pack"].get_base_dir()), "--main-pack", game_path.path_join(gamebox_game["godot"]["pack"])]) == -1:
+						#OS.set_environment("PATH", lib_path + ";" + game_path.path_join(gamebox_json["godot-pack"]).get_base_dir())
+				if OS.create_process(app_install_dir.path_join("godot/") + godot_version + "/godot-" + GODOT_VERSIONS[godot_version] + file_extension, ["--path", game_path.path_join(gamebox_json["godot-pack"].get_base_dir()), "--main-pack", game_path.path_join(gamebox_json["godot-pack"])]) == -1:
 					OS.alert("This game's process creation of Godot failed.", "Error - Gamebox")
 #				match OS.get_name():
 #					"Linux":
@@ -224,23 +226,23 @@ func _on_games_item_activated(index):
 #						OS.set_environment("PATH", lib_path)
 			else:
 				OS.alert("This game's .pck file can't be loaded.", "Error - Gamebox")
-		elif gamebox_game is Dictionary and "executable" in gamebox_game and ("linux-x64" in gamebox_game["executable"] or "windows-x64" in gamebox_game["executable"]) and gamebox_game["executable"].values().all(func(value): return value is String) and gamebox_game["executable"].keys().filter(func(key): return gamebox_game["executable"][key] != "").all(func(key): return FileAccess.file_exists(game_path.path_join(gamebox_game["executable"][key]))):
+		elif gamebox_json is Dictionary and ("linux-x64" in gamebox_json or "windows-x64" in gamebox_json) and gamebox_json.values().all(func(value): return value is String) and gamebox_json.keys().filter(func(key): return gamebox_json[key] != "").all(func(key): return FileAccess.file_exists(game_path.path_join(gamebox_json[key]))):
 			var os_name = ""
 			match OS.get_name():
 				"Linux":
 					os_name = "linux-x64"
 				"Windows":
 					os_name = "windows-x64"
-			if os_name in gamebox_game["executable"] and gamebox_game["executable"][os_name] and OS.create_process(game_path.path_join(gamebox_game["executable"][os_name]), []) == -1:
+			if os_name in gamebox_json and gamebox_json[os_name] and OS.create_process(game_path.path_join(gamebox_json[os_name]), []) == -1:
 				OS.alert("This game's process creation failed.", "Error - Gamebox")
-			elif not os_name in gamebox_game["executable"] or not gamebox_game["executable"][os_name]:
+			elif not os_name in gamebox_json or not gamebox_json[os_name]:
 				OS.alert("This game does not include a " + OS.get_name() + " executable.", "Error - Gamebox")
 		else:
-			OS.alert("This game's gamebox_game.json file is not properly configured.", "Error - Gamebox")
+			OS.alert("This game's gamebox.json file is not properly configured.", "Error - Gamebox")
 
 
 func _on_workshop_pressed():
-	Steam.activateGameOverlayToWebPage("https://steamcommunity.com/app/" + str(STEAM_APP_ID) + "/workshop/")
+	Steam.activateGameOverlayToWebPage("https://steamcommunity.com/app/2744620/workshop/")
 
 
 func _on_upload_pressed():
@@ -361,7 +363,7 @@ func _on_upload_window_close_requested():
 
 
 func _on_help_pressed():
-	Steam.activateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=3148684231")
+	Steam.activateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=3161344855")
 
 
 func _on_about_pressed():
@@ -369,7 +371,7 @@ func _on_about_pressed():
 
 
 func _on_open_changelog_pressed():
-	Steam.activateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=3148694992")
+	Steam.activateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=3161345597")
 
 
 func _on_about_window_close_requested():

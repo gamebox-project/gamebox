@@ -13,7 +13,6 @@ config_version=5
 config/name="Gamebox"
 run/main_scene="res://menu.tscn"
 config/use_custom_user_dir=true
-config/custom_user_dir_name="Gamebox Playtest"
 config/features=PackedStringArray("4.2", "Forward Plus")
 boot_splash/image="res://logo.png"
 boot_splash/fullsize=false

@@ -49,20 +49,20 @@ metadata/_edit_use_anchors_ = true
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -52.0
-offset_right = 243.0
+offset_top = -49.0
+offset_right = 217.0
 grow_vertical = 0
-text = "Gamebox v0.0.3 (playtest)
+text = "Gamebox v0.1 (early access)
 Godot Engine v"
 
 [node name="Buttons" type="HBoxContainer" parent="."]
-offset_right = 300.0
+offset_right = 292.0
 offset_bottom = 31.0
 theme_override_constants/separation = 0
 
 [node name="Workshop" type="Button" parent="Buttons"]
 layout_mode = 2
-tooltip_text = "Steam Overlay - https://steamcommunity.com/app/2744870/workshop/"
+tooltip_text = "Steam Overlay - https://steamcommunity.com/app/2744620/workshop/"
 text = "Workshop"
 
 [node name="Upload" type="Button" parent="Buttons"]
@@ -80,7 +80,7 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 795.0
 offset_bottom = 83.0
-text = "NOTE: If you're going to upload a game, make sure you've properly configured the gamebox_game.json file. Read the guide by clicking the Help button for more information."
+text = "NOTE: If you're going to upload a game, make sure you've properly configured the gamebox.json file. Read the guide by clicking the Help button for more information."
 autowrap_mode = 2
 
 [node name="SelectFolder" type="Button" parent="Buttons/Upload/Window"]
@@ -215,7 +215,7 @@ autowrap_mode = 2
 
 [node name="Help" type="Button" parent="Buttons"]
 layout_mode = 2
-tooltip_text = "Steam Overlay - https://steamcommunity.com/sharedfiles/filedetails/?id=3148684231"
+tooltip_text = "Steam Overlay - https://steamcommunity.com/sharedfiles/filedetails/?id=3161344855"
 text = "Help"
 
 [node name="About" type="Button" parent="Buttons"]
@@ -363,10 +363,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 "
 
-[node name="Tests" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses"]
+[node name="Games" type="RichTextLabel" parent="Buttons/About/Window/Tabs/Licenses"]
 visible = false
 layout_mode = 2
-text = "The tests included are made with assets from the Godot Asset Library. 2D Grappling Hook by ShatteredReality (CC0 license) and Basic 3d Starter by Luking (MIT license).
+text = "The games included are made with assets from the Godot Asset Library. 2D Grappling Hook by ShatteredReality (CC0 license) and Basic 3d Starter by Luking (MIT license).
 
 ---
 
@@ -402,7 +402,7 @@ layout_mode = 2
 layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
-tooltip_text = "Steam Overlay - https://steamcommunity.com/sharedfiles/filedetails/?id=3148694992"
+tooltip_text = "Steam Overlay - https://steamcommunity.com/sharedfiles/filedetails/?id=3161345597"
 text = "Open"
 
 [node name="Quit" type="Button" parent="Buttons"]
